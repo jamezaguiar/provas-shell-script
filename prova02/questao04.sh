@@ -39,3 +39,4 @@ multTable() {
   done
 }
 multTable $1
+tput sgr0
