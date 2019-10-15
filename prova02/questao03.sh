@@ -26,7 +26,7 @@ gerarVetor() {
 
 bubbleSort() {
   declare -a vetorBubble
-  for i in $(seq 0 $(expr $tamanhoVetor - 1)); do
+  for i in $(seq 0 $(expr $1 - 1)); do
     vetorBubble[$i]=${vetor[$i]}
   done
 
@@ -56,33 +56,38 @@ bubbleSort() {
 }
 
 quickSort() {
-  iniVet=$1
-  fimVet=$2
-  i=$iniVet
-  j=$fimVet
-  pivo=${vetor[$(echo $iniVet + $fimVet / 2 | bc)]}
-  while [ "$i" -le "$j" ]; do
-    while [ "${vetor[$i]}" -lt "$pivo" ]; do
-      i=$(expr $i + 1)
-    done
-    while [ "${vetor[$j]}" -gt "$pivo" ]; do
-      j=$(expr $j - 1)
-    done
-    if [ "$i" -le "$j" ]; then
-      aux=${vetor[$i]}
-      vetor[$i]=${vetor[$j]}
-      vetor[$j]=$aux
-      i=$(expr $i + 1)
-      j=$(expr $j - 1)
-    fi
-  done
-  if [ "$iniVet" -lt "$j" ]; then
-    quickSort $iniVet $j
-  fi
-  if [ "$i" -lt "$fimVet" ]; then
-    quickSort $i $fimVet
-  fi
+  esq=$1
+  dir=$2
 
+  if [ "$1" -lt "$2" ]; then
+    pivo=${vetor[$1]}
+
+    while [ "$esq" -lt "$dir" ]; do
+
+      while [ "${vetor[$esq]}" -le "$pivo" -a "$esq" -lt "$2" ]; do
+        esq=$(expr $esq + 1)
+      done
+
+      while [ "${vetor[$dir]}" -gt "$pivo" ]; do
+        dir=$(expr $dir - 1)
+      done
+
+      if [ "$esq" -lt "$dir" ]; then
+        aux=${vetor[$esq]}
+        vetor[$esq]=${vetor[$dir]}
+        vetor[$dir]=$aux
+      fi
+
+    done
+
+    aux=${vetor[$dir]}
+    vetor[$dir]=${vetor[$1]}
+    vetor[$1]=$aux
+    aux=$dir
+
+    quickSort $1 $(expr $dir - 1)
+    quickSort $(expr $aux + 1) $2
+  fi
 }
 
 tamVetor=$1
